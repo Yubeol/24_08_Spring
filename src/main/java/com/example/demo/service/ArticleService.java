@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.repository.ArticleRepository;
-import com.exmaple.demo.vo.Article;
+import com.example.demo.vo.Article;
 
 @Service
 public class ArticleService {

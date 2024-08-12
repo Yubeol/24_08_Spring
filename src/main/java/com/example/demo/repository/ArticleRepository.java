@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
-import com.exmaple.demo.vo.Article;
+import com.example.demo.vo.Article;
 
 @Mapper
 public interface ArticleRepository {
