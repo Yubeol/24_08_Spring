@@ -18,9 +18,28 @@ public class UsrMemberController {
 	@Autowired
 	private MemberService memberService;
 
+	@RequestMapping("/usr/member/doLogout")
+	@ResponseBody
+	public ResultData<Member> doLogout(HttpSession httpSession) {
+
+		boolean isLogined = false;
+
+		if (httpSession.getAttribute("loginedMemberId") != null) {
+			isLogined = true;
+		}
+
+		if (!isLogined) {
+			return ResultData.from("F-A", "이미 로그아웃 함");
+		}
+
+		httpSession.removeAttribute("loginedMemberId");
+
+		return ResultData.from("S-1", Ut.f("로그아웃 성공"));
+	}
+
 	@RequestMapping("/usr/member/doLogin")
 	@ResponseBody
-	public ResultData<Member> doLogin(HttpSession httpSession, String loginId, String loginPw) {
+	public ResultData doLogin(HttpSession httpSession, String loginId, String loginPw) {
 
 		boolean isLogined = false;
 
@@ -51,43 +70,7 @@ public class UsrMemberController {
 
 		httpSession.setAttribute("loginedMemberId", member.getId());
 
-		return ResultData.from("S-1", Ut.f("%s님 환영합니다", member.getNickname()));
-	}
-	
-	@RequestMapping("/usr/member/doLogOut")
-	@ResponseBody
-	public ResultData<Member> doLogOut(HttpSession httpSession, String loginId, String loginPw) {
-
-		boolean isLogined = false;
-
-		if (httpSession.getAttribute("loginedMemberId") != null) {
-			isLogined = true;
-		}
-
-		if (isLogined) {
-			return ResultData.from("F-A", "이미 로그인 함");
-		}
-
-		if (Ut.isEmptyOrNull(loginId)) {
-			return ResultData.from("F-1", "loginId 입력 x");
-		}
-		if (Ut.isEmptyOrNull(loginPw)) {
-			return ResultData.from("F-2", "loginPw 입력 x");
-		}
-
-		Member member = memberService.getMemberByLoginId(loginId);
-
-		if (member == null) {
-			return ResultData.from("F-3", Ut.f("%s는(은) 존재 x", loginId));
-		}
-
-		if (member.getLoginPw().equals(loginPw) == false) {
-			return ResultData.from("F-4", Ut.f("비밀번호 틀림"));
-		}
-
-		httpSession.setAttribute("loginedMemberId", member.getId());
-
-		return ResultData.from("S-1", Ut.f("%s님 환영합니다", member.getNickname()));
+		return ResultData.from("S-1", Ut.f("%s님 환영합니다", member.getNickname()), member);
 	}
 
 	@RequestMapping("/usr/member/doJoin")
