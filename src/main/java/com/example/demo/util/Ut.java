@@ -1,34 +1,35 @@
-package com.example.demo.vo;
+package com.example.demo.util;
 
-import lombok.Getter;
+import java.lang.reflect.Array;
+import java.util.Map;
 
-public class ResultData {
-	@Getter
-	private String ResultCode;
-	@Getter
-	private String msg;
-	@Getter
-	private Object data1;
+public class Ut {
 
-	public static ResultData from(String ResultCode, String msg) {
-		return from(ResultCode, msg, null);
+	public static boolean isEmptyOrNull(String str) {
+		return str == null || str.trim().length() == 0;
 	}
 
-	public static ResultData from(String ResultCode, String msg, Object data1) {
-		ResultData rd = new ResultData();
-		rd.ResultCode = ResultCode;
-		rd.msg = msg;
-		rd.data1 = data1;
+	public static boolean isEmpty(Object obj) {
+		if (obj == null) {
+			return true;
+		}
+		if (obj instanceof String) {
+			return ((String) obj).trim().length() == 0;
+		}
 
-		return rd;
+		if (obj instanceof Map) {
+			return ((Map<?, ?>) obj).isEmpty();
+		}
+
+		if (obj.getClass().isArray()) {
+			return Array.getLength(obj) == 0;
+		}
+
+		return false;
 	}
 
-	public boolean isSuccess() {
-		return ResultCode.startsWith("S-");
-	}
+	public static String f(String format, Object... args) {
 
-	public boolean isFail() {
-		return isSuccess() == false;
+		return String.format(format, args);
 	}
-
 }
