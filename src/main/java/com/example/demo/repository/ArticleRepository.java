@@ -1,31 +1,41 @@
-package com.example.demo.repository;
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.repository.ArticleRepository">
+	<update id="modifyArticle">
+		UPDATE article 
+		<set>
+			<if test="title != null and title != ''">title = #{title},</if>
+			<if test="body != null and body != ''">`body` = #{body},</if>
+			updateDate = NOW()
+		</set>
+		WHERE id = #{id}
+	</update>
 
-import java.util.List;
+	<insert id="writeArticle">
+		INSERT INTO article
+		SET regDate = NOW(),
+		updateDate = NOW(),
+		memberId = #{memberId},
+		title = #{title},
+		`body` = #{body}
+	</insert>
 
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+	<select id="getArticles" resultType="Article">
+		SELECT A.* , M.nickname AS extra__writer
+		FROM article AS A
+		INNER JOIN `member` AS M
+		ON A.memberId = M.id
+		ORDER BY
+		A.id DESC
+	</select>
 
-import com.example.demo.vo.Article;
-
-@Mapper
-public interface ArticleRepository {
-
-//	@Insert("INSERT INTO article SET regDate = NOW(), updateDate = NOW(), title = #{title}, `body` = #{body}")
-	public void writeArticle(int memberId, String title, String body);
-
-	@Delete("DELETE FROM article WHERE id = #{id}")
-	public void deleteArticle(int id);
-
-//	@Update("UPDATE article SET updateDate = NOW(), title = #{title}, `body` = #{body} WHERE id = #{id}")
-	public void modifyArticle(int id, String title, String body);
-
-//	@Select("SELECT * FROM article WHERE id = #{id}")
-	public Article getArticleById(int id);
-
-//	@Select("SELECT * FROM article ORDER BY id DESC")
-	public List<Article> getArticles();
-
-	@Select("SELECT LAST_INSERT_ID();")
-	public int getLastInsertId();
-}
+	<select id="getArticleById" resultType="Article">
+		SELECT A.* , M.nickname AS extra__writer
+		FROM article AS A
+		INNER JOIN `member` AS M
+		ON A.memberId = M.id
+		WHERE A.id = #{id}
+	</select>
+</mapper>
