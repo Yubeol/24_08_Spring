@@ -17,13 +17,14 @@ import jakarta.servlet.http.HttpServletRequest;
 public class UsrMemberController {
 
 	@Autowired
+	private Rq rq;
+
+	@Autowired
 	private MemberService memberService;
 
 	@RequestMapping("/usr/member/doLogout")
 	@ResponseBody
 	public String doLogout(HttpServletRequest req) {
-
-		Rq rq = (Rq) req.getAttribute("rq");
 
 		rq.logout();
 
@@ -31,7 +32,8 @@ public class UsrMemberController {
 	}
 
 	@RequestMapping("/usr/member/login")
-	public String showLogin() {
+	public String showLogin(HttpServletRequest req) {
+
 		return "/usr/member/login";
 	}
 
